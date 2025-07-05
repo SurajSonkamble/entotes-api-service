@@ -1,11 +1,15 @@
 package com.becoder.entity;
 
-import java.sql.Date;
+
+
+import java.util.Date;
 
 import jakarta.persistence.MappedSuperclass;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 @MappedSuperclass	
 public class BaseModel {
 
