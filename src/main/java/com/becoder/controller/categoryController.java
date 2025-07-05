@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.becoder.dto.CategoryDto;
+import com.becoder.dto.CategoryResponse;
 import com.becoder.entity.Category;
 import com.becoder.service.CategoryService;
 
@@ -23,9 +25,9 @@ public class categoryController {
 	private CategoryService categoryService;
 
 	@PostMapping("/save-category")
-	public ResponseEntity<?> saveCategory(@RequestBody Category category) {
+	public ResponseEntity<?> saveCategory(@RequestBody CategoryDto categoryDto) {
 
-		Boolean saveCategory = categoryService.saveCategory(category);
+		Boolean saveCategory = categoryService.saveCategory(categoryDto);
 
 		if (saveCategory) {
 
@@ -40,7 +42,7 @@ public class categoryController {
 	@GetMapping("/category")
 	public ResponseEntity<?> getAllCategories() {
 
-		List<Category> allCategory = categoryService.getAllCategory();
+		List<CategoryDto> allCategory = categoryService.getAllCategory();
 
 		if (CollectionUtils.isEmpty(allCategory)) {
 
@@ -51,6 +53,21 @@ public class categoryController {
 
 		}
 
+	}
+	
+	@GetMapping("/active-category")
+	public ResponseEntity<?> getActiveCategory(){
+		
+		List<CategoryResponse> activeCategory = categoryService.getActiveCategory();
+		
+		if(CollectionUtils.isEmpty(activeCategory)) {
+			
+			return ResponseEntity.noContent().build();
+			
+		} else {
+			
+			return new ResponseEntity<>(activeCategory, HttpStatus.OK);
+		}
 	}
 
 }
