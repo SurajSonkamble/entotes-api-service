@@ -18,10 +18,14 @@ import org.springframework.web.bind.annotation.RestController;
 import com.becoder.dto.CategoryDto;
 import com.becoder.dto.CategoryResponse;
 import com.becoder.entity.Category;
+import com.becoder.exception.ResourceNotFoundException;
 import com.becoder.service.CategoryService;
+
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("/api/v1/category")
+@Slf4j
 public class categoryController {
 
 	@Autowired
@@ -74,13 +78,13 @@ public class categoryController {
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<?> getCategoryDetailsById(@PathVariable Integer id) {
+	public ResponseEntity<?> getCategoryDetailsById(@PathVariable Integer id) throws Exception {
 
 		CategoryDto categoryDto = categoryService.getCategoryById(id);
 
 		if (ObjectUtils.isEmpty(categoryDto)) {
 
-			return new ResponseEntity<>("Category Not Found with Id=" + id, HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>("Category Not Found with Id= " + id, HttpStatus.NOT_FOUND);
 
 		}
 
