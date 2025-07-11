@@ -1,10 +1,11 @@
 package com.becoder.exception;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+
+import com.becoder.util.ValidationException;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -30,7 +31,14 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(ResourceNotFoundException.class)
 	public ResponseEntity<?> ResourceNotFoundException(Exception e) {
 
-		log.error("GlobalExceptionHandler::ResourceNotFoundException::",e.getMessage());
+		log.error("GlobalExceptionHandler::ResourceNotFoundException::", e.getMessage());
 		return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+	}
+
+	@ExceptionHandler(ValidationException.class)
+	public ResponseEntity<?> handlerValidationException(ValidationException e) {
+
+		return new ResponseEntity<>(e.getErrors(), HttpStatus.BAD_REQUEST);
+
 	}
 }
