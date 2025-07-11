@@ -17,6 +17,7 @@ import com.becoder.entity.Category;
 import com.becoder.exception.ResourceNotFoundException;
 import com.becoder.repository.CategoryRepository;
 import com.becoder.service.CategoryService;
+import com.becoder.util.Validation;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
@@ -26,11 +27,18 @@ public class CategoryServiceImpl implements CategoryService {
 
 	@Autowired
 	private ModelMapper mapper;
+	
+	@Autowired
+	private Validation validation;
 
 	@Override
-	public Boolean saveCategory(CategoryDto categoryDto) {
+	public Boolean saveCategory(CategoryDto categoryDto) throws Exception {
+		
+		validation.categoryValidation(categoryDto);
 
 		Category category = mapper.map(categoryDto, Category.class);
+		
+	
 
 		if (ObjectUtils.isEmpty(category.getId())) {
 
@@ -55,7 +63,7 @@ public class CategoryServiceImpl implements CategoryService {
 		return true;
 	}
 
-	private void updateCatagory(Category category) {
+	private void updateCatagory(Category category) throws Exception {
 
 		Optional<Category> findById = categoryRepo.findById(category.getId());
 
@@ -69,6 +77,9 @@ public class CategoryServiceImpl implements CategoryService {
 
 			category.setUpdatedBy(1);
 			category.setUpdatedOn(new Date());
+		}else {
+			
+			throw new ResourceNotFoundException("Category Not Found With Id"+ category.getId());
 		}
 
 	}

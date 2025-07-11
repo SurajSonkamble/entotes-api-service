@@ -26,13 +26,13 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequestMapping("/api/v1/category")
 @Slf4j
-public class categoryController {
+public class CategoryController {
 
 	@Autowired
 	private CategoryService categoryService;
 
 	@PostMapping("/save-category")
-	public ResponseEntity<?> saveCategory(@RequestBody CategoryDto categoryDto) {
+	public ResponseEntity<?> saveCategory(@RequestBody CategoryDto categoryDto) throws Exception {
 
 		Boolean saveCategory = categoryService.saveCategory(categoryDto);
 
@@ -46,7 +46,7 @@ public class categoryController {
 
 	}
 
-	@GetMapping("/category")
+	@GetMapping("/list")
 	public ResponseEntity<?> getAllCategories() {
 
 		List<CategoryDto> allCategory = categoryService.getAllCategory();
