@@ -5,7 +5,7 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.becoder.entity.Category;	
+import com.becoder.entity.Category;
 
 public interface CategoryRepository extends JpaRepository<Category, Integer> {
 
@@ -16,5 +16,7 @@ public interface CategoryRepository extends JpaRepository<Category, Integer> {
 	List<Category> findByIsDeletedFalse();
 
 	List<Category> findByIsActiveTrueAndIsDeletedFalse();
+
+	Boolean existsByName(String name);
 
 }
