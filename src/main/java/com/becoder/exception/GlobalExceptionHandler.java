@@ -6,6 +6,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import com.becoder.util.CommonUtils;
 import com.becoder.util.ValidationException;
 
 import lombok.extern.slf4j.Slf4j;
@@ -19,27 +20,36 @@ public class GlobalExceptionHandler {
 
 		log.error("GlobalExceptionHandler::HandleException::", e.getMessage());
 
-		return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+		return CommonUtils.createErrorResponseMessage(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+		
+		//return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	@ExceptionHandler(NullPointerException.class)
 	public ResponseEntity<?> HandleNullPointerException(Exception e) {
 
 		log.error("GlobalExceptionHandler::HandleNullPointerException::", e.getMessage());
-		return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+		
+		return CommonUtils.createErrorResponseMessage(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+		//return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	@ExceptionHandler(ResourceNotFoundException.class)
 	public ResponseEntity<?> ResourceNotFoundException(Exception e) {
 
 		log.error("GlobalExceptionHandler::ResourceNotFoundException::", e.getMessage());
-		return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+		
+		return CommonUtils.createErrorResponseMessage(e.getMessage(), HttpStatus.NOT_FOUND);
+		//return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
 	}
 
 	@ExceptionHandler(ValidationException.class)
 	public ResponseEntity<?> handlerValidationException(ValidationException e) {
+		
+		return CommonUtils.createErrorResponse(e.getErrors(), HttpStatus.NOT_FOUND);
 
-		return new ResponseEntity<>(e.getErrors(), HttpStatus.BAD_REQUEST);
+
+		//return new ResponseEntity<>(e.getErrors(), HttpStatus.BAD_REQUEST);
 
 	}
 
