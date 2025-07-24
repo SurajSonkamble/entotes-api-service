@@ -1,6 +1,5 @@
 package com.becoder.entity;
 
-import org.hibernate.annotations.ManyToAny;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import jakarta.persistence.Entity;
@@ -20,7 +19,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-public class Notes {
+public class Notes extends BaseModel{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

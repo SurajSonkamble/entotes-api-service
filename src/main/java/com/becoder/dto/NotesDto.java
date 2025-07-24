@@ -21,7 +21,7 @@ public class NotesDto {
 
 	private CategoryDto category;
 
-	private Integer createBy;
+	private Integer createdBy;
 
 	private Date createOn;
 
