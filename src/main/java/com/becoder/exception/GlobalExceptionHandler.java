@@ -1,5 +1,7 @@
 package com.becoder.exception;
 
+import java.io.FileNotFoundException;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -21,35 +23,36 @@ public class GlobalExceptionHandler {
 		log.error("GlobalExceptionHandler::HandleException::", e.getMessage());
 
 		return CommonUtils.createErrorResponseMessage(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-		
-		//return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+
+		// return new ResponseEntity<>(e.getMessage(),
+		// HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	@ExceptionHandler(NullPointerException.class)
 	public ResponseEntity<?> HandleNullPointerException(Exception e) {
 
 		log.error("GlobalExceptionHandler::HandleNullPointerException::", e.getMessage());
-		
+
 		return CommonUtils.createErrorResponseMessage(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-		//return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+		// return new ResponseEntity<>(e.getMessage(),
+		// HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	@ExceptionHandler(ResourceNotFoundException.class)
 	public ResponseEntity<?> ResourceNotFoundException(Exception e) {
 
 		log.error("GlobalExceptionHandler::ResourceNotFoundException::", e.getMessage());
-		
+
 		return CommonUtils.createErrorResponseMessage(e.getMessage(), HttpStatus.NOT_FOUND);
-		//return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+		// return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
 	}
 
 	@ExceptionHandler(ValidationException.class)
 	public ResponseEntity<?> handlerValidationException(ValidationException e) {
-		
+
 		return CommonUtils.createErrorResponse(e.getErrors(), HttpStatus.NOT_FOUND);
 
-
-		//return new ResponseEntity<>(e.getErrors(), HttpStatus.BAD_REQUEST);
+		// return new ResponseEntity<>(e.getErrors(), HttpStatus.BAD_REQUEST);
 
 	}
 
@@ -58,12 +61,17 @@ public class GlobalExceptionHandler {
 
 		return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
 	}
-	
-	
+
 	@ExceptionHandler(HttpMessageNotReadableException.class)
-	public ResponseEntity<?> handleHttpMessageNotReadableException(HttpMessageNotReadableException e){
-		
-		
+	public ResponseEntity<?> handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
+
 		return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+	}
+
+	@ExceptionHandler(FileNotFoundException.class)
+	public ResponseEntity<?> handleFileNotFoundException(FileNotFoundException e) {
+
+		return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+
 	}
 }

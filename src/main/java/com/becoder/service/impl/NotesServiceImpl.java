@@ -1,7 +1,9 @@
 package com.becoder.service.impl;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -12,12 +14,18 @@ import org.apache.commons.io.FilenameUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StreamUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.becoder.dto.NotesDto;
 import com.becoder.dto.NotesDto.CategoryDto;
+import com.becoder.dto.NotesDto.FilesDto;
+import com.becoder.dto.NotesResponse;
 import com.becoder.entity.FileDetails;
 import com.becoder.entity.Notes;
 import com.becoder.exception.ResourceNotFoundException;
@@ -52,19 +60,26 @@ public class NotesServiceImpl implements NotesService {
 
 		NotesDto notesDto = ob.readValue(notes, NotesDto.class);
 
+		if (!ObjectUtils.isEmpty(notesDto.getId())) {
+
+			updateNotes(notesDto, file);
+		}
+
 		checkCategoryExist(notesDto.getCategory());
 
 		Notes notesMap = mapper.map(notesDto, Notes.class);
 
 		FileDetails fileDtls = saveFileDtls(file);
-		
-		
-		if(!ObjectUtils.isEmpty(fileDtls)) {
-			
+
+		if (!ObjectUtils.isEmpty(fileDtls)) {
+
 			notesMap.setFileDetails(fileDtls);
-		}else {
-			
-			notesMap.setFileDetails(null);
+		} else {
+
+			if (ObjectUtils.isEmpty(notesDto.getId())) {
+
+				notesMap.setFileDetails(null);
+			}
 		}
 
 		Notes saveNotes = notesRepo.save(notesMap);
@@ -75,6 +90,18 @@ public class NotesServiceImpl implements NotesService {
 		}
 
 		return false;
+	}
+
+	private void updateNotes(NotesDto notesDto, MultipartFile file) throws Exception {
+
+		Notes existNotes = notesRepo.findById(notesDto.getId())
+				.orElseThrow(() -> new ResourceNotFoundException("Invalid Notes id"));
+
+		if (ObjectUtils.isEmpty(file)) {
+
+			notesDto.setFileDetails(mapper.map(existNotes.getFileDetails(), FilesDto.class));
+		}
+
 	}
 
 	private FileDetails saveFileDtls(MultipartFile file) throws IOException {
@@ -156,6 +183,41 @@ public class NotesServiceImpl implements NotesService {
 
 		return notesRepo.findAll().stream().map(note -> mapper.map(note, NotesDto.class)).toList();
 
+	}
+
+	@Override
+	public byte[] downloadFile(FileDetails fileDetails) throws Exception {
+
+		// InputStream io = new FileInputStream(fileDtls.getPath());
+
+		InputStream io = new FileInputStream(fileDetails.getPath());
+
+		return StreamUtils.copyToByteArray(io);
+	}
+
+	@Override
+	public FileDetails getFileDetails(Integer id) throws Exception {
+
+		FileDetails fileDtls = fileRepo.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("File is not avilable"));
+
+		return fileDtls;
+	}
+
+	@Override
+	public NotesResponse getAllNotesByUser(Integer userId, Integer pageNo, Integer pageSize) {
+
+		Pageable pageable = PageRequest.of(pageNo, pageSize);
+
+		Page<Notes> pageNotes = notesRepo.findByCreatedBy(userId, pageable);
+
+		List<NotesDto> notesDto = pageNotes.get().map(n -> mapper.map(n, NotesDto.class)).toList();
+
+		NotesResponse notes = NotesResponse.builder().notes(notesDto).pageNO(pageNotes.getNumber())
+				.pageSize(pageNotes.getSize()).totalElements(pageNotes.getTotalElements())
+				.totalPages(pageNotes.getTotalPages()).isFirst(pageNotes.isFirst()).isLast(pageNotes.isLast()).build();
+
+		return notes;
 	}
 
 }
