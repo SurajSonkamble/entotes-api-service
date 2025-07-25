@@ -1,5 +1,7 @@
 package com.becoder.entity;
 
+import java.time.LocalDateTime;
+
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import jakarta.persistence.Entity;
@@ -19,7 +21,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-public class Notes extends BaseModel{
+public class Notes extends BaseModel {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,5 +36,9 @@ public class Notes extends BaseModel{
 
 	@ManyToOne
 	private FileDetails fileDetails;
+
+	private Boolean isDeleted;
+
+	private LocalDateTime deletedOn;
 
 }

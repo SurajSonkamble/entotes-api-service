@@ -6,9 +6,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 import org.apache.commons.io.FilenameUtils;
 import org.modelmapper.ModelMapper;
@@ -18,6 +20,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -218,6 +221,42 @@ public class NotesServiceImpl implements NotesService {
 				.totalPages(pageNotes.getTotalPages()).isFirst(pageNotes.isFirst()).isLast(pageNotes.isLast()).build();
 
 		return notes;
+	}
+
+	@Override
+	public void hardDeleteNotes(Integer id) throws Exception {
+
+		Notes notes = notesRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Id not Found"));
+
+		notes.setIsDeleted(true);
+
+		notes.setDeletedOn(LocalDateTime.now());
+
+		notesRepo.save(notes);
+
+	}
+
+	@Override
+	public void restoreDeletedNotes(Integer id) throws Exception {
+
+		Notes notes = notesRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Id Not Found"));
+
+		notes.setIsDeleted(false);
+		notes.setDeletedOn(null);
+
+		notesRepo.save(notes);
+
+	}
+
+	@Override
+	public List<NotesDto> getUserRecycleBinNotes(int userId) {
+
+		List<Notes> recycleNotes = notesRepo.findByCreatedByAndIsDeletedTrue(userId);
+
+		List<NotesDto> notesDtoList = recycleNotes.stream().map(note -> mapper.map(note, NotesDto.class)).toList();
+
+		return notesDtoList;
+
 	}
 
 }
