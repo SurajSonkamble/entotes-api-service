@@ -15,9 +15,17 @@ public interface NotesService {
 	public List<NotesDto> getAllNotes();
 
 	public byte[] downloadFile(FileDetails fileDetails) throws Exception;
-	
+
 	public FileDetails getFileDetails(Integer id) throws Exception;
-	
+
 	public NotesResponse getAllNotesByUser(Integer userId, Integer pageNo, Integer pageSize);
+
+	public void hardDeleteNotes(Integer id) throws Exception;
+
+	public void restoreDeletedNotes(Integer id) throws Exception;
+
+	// public void emptyRecycleBin(int userId);
+
+	public List<NotesDto> getUserRecycleBinNotes(int userId);
 
 }
