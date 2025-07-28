@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.becoder.dto.FavoriteNoteDto;
 import com.becoder.dto.NotesDto;
 import com.becoder.dto.NotesResponse;
 import com.becoder.entity.FileDetails;
@@ -84,15 +86,51 @@ public class NotesController {
 
 		NotesResponse notes = notesService.getAllNotesByUser(userId, pageNo, pageSize);
 
-		/*
-		 * if(CollectionUtils.isEmpty(notes)) {
-		 * 
-		 * return ResponseEntity.noContent().build();
-		 * 
-		 * }
-		 */
-
 		return CommonUtils.createBuildResponse(notes, HttpStatus.OK);
+
+	}
+
+	@GetMapping("/fav/{noteId}")
+	public ResponseEntity<?> favoriteNote(@PathVariable Integer noteId) throws Exception {
+
+		notesService.favoriteNotes(noteId);
+
+		return CommonUtils.createBuildResponseMessage("NOtes added favorite", HttpStatus.CREATED);
+	}
+
+	@DeleteMapping("/un-fav/{favNoteId}")
+	public ResponseEntity<?> unfavoriteNotes(@PathVariable Integer favNoteId) throws Exception {
+
+		notesService.favoriteNotes(favNoteId);
+
+		return CommonUtils.createBuildResponseMessage("Remove Favorite", HttpStatus.OK);
+	}
+
+	@GetMapping("/fav-note")
+	public ResponseEntity<?> getFavoriteNote() {
+
+		List<FavoriteNoteDto> userFavoriteNotes = notesService.getUserFavoriteNotes();
+
+		if (CollectionUtils.isEmpty(userFavoriteNotes)) {
+
+			return ResponseEntity.noContent().build();
+		}
+
+		return CommonUtils.createBuildResponse(userFavoriteNotes, HttpStatus.OK);
+
+	}
+
+	@GetMapping("/copy/{id}")
+	public ResponseEntity<?> copyNotes(@PathVariable Integer id) throws Exception {
+
+		boolean copyNotes = notesService.copyNotes(id);
+
+		if (copyNotes) {
+
+			return CommonUtils.createBuildResponseMessage("Copied Success", HttpStatus.CREATED);
+		}
+
+		return CommonUtils.createErrorResponseMessage("copy Failed ! Try Again", HttpStatus.INTERNAL_SERVER_ERROR);
 
 	}
 
