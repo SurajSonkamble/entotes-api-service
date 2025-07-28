@@ -90,6 +90,7 @@ public class NotesController {
 
 	}
 
+<<<<<<< HEAD
 	@GetMapping("/fav/{noteId}")
 	public ResponseEntity<?> favoriteNote(@PathVariable Integer noteId) throws Exception {
 
@@ -132,6 +133,46 @@ public class NotesController {
 
 		return CommonUtils.createErrorResponseMessage("copy Failed ! Try Again", HttpStatus.INTERNAL_SERVER_ERROR);
 
+=======
+	@DeleteMapping("/delete/{id}")
+	public ResponseEntity<?> hardDeleteNotes(@PathVariable Integer id) throws Exception {
+
+		notesService.hardDeleteNotes(id);
+
+		return CommonUtils.createBuildResponseMessage("Delete Success", HttpStatus.OK);
+
+	}
+
+	@GetMapping("/restore/{id}")
+	public ResponseEntity<?> restoreDeleted(@PathVariable Integer id) throws Exception {
+
+		notesService.restoreDeletedNotes(id);
+
+		return CommonUtils.createBuildResponseMessage("Restore Success", HttpStatus.OK);
+
+	}
+
+	@GetMapping("/recycle-bin")
+	public ResponseEntity<?> emptyRecycleBin(Integer userId) {
+
+		userId = 2;
+
+		List<NotesDto> notes = notesService.getUserRecycleBinNotes(userId);
+
+		if (CollectionUtils.isEmpty(notes)) {
+
+			return CommonUtils.createBuildResponseMessage("Notes not avaible in Recycle BIn", HttpStatus.OK);
+		}
+
+		return CommonUtils.createBuildResponse(notes, HttpStatus.OK);
+	}
+
+	public ResponseEntity<?> hardDeleteNote(@PathVariable Integer id) throws Exception {
+
+		notesService.hardDeleteNotes(id);
+
+		return CommonUtils.createBuildResponseMessage("Deleteed Success", HttpStatus.OK);
+>>>>>>> 6ea6b7bc696d66611edcbc013fed823b965bfecd
 	}
 
 }
