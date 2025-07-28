@@ -25,14 +25,17 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.becoder.dto.FavoriteNoteDto;
 import com.becoder.dto.NotesDto;
 import com.becoder.dto.NotesDto.CategoryDto;
 import com.becoder.dto.NotesDto.FilesDto;
 import com.becoder.dto.NotesResponse;
+import com.becoder.entity.FavouriteNote;
 import com.becoder.entity.FileDetails;
 import com.becoder.entity.Notes;
 import com.becoder.exception.ResourceNotFoundException;
 import com.becoder.repository.CategoryRepository;
+import com.becoder.repository.FavouriteNoteRepository;
 import com.becoder.repository.FileRepository;
 import com.becoder.repository.NotesRepository;
 import com.becoder.service.NotesService;
@@ -52,6 +55,8 @@ public class NotesServiceImpl implements NotesService {
 
 	@Autowired
 	private CategoryRepository categoryRepo;
+
+	private FavouriteNoteRepository favouriteNoteRepo;
 
 	@Value("${file.upload.path}")
 	private String uplaodPath;
@@ -224,6 +229,20 @@ public class NotesServiceImpl implements NotesService {
 	}
 
 	@Override
+<<<<<<< HEAD
+	public void favoriteNotes(Integer notesId) throws Exception {
+
+		int userId = 1;
+
+		Notes notes = notesRepo.findById(notesId)
+				.orElseThrow(() -> new ResourceNotFoundException("notes Id Not Found"));
+
+		FavouriteNote favouriteNote = FavouriteNote.builder().note(notes).userId(userId)
+
+				.build();
+
+		favouriteNoteRepo.save(favouriteNote);
+=======
 	public void hardDeleteNotes(Integer id) throws Exception {
 
 		Notes notes = notesRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Id not Found"));
@@ -233,10 +252,52 @@ public class NotesServiceImpl implements NotesService {
 		notes.setDeletedOn(LocalDateTime.now());
 
 		notesRepo.save(notes);
+>>>>>>> 6ea6b7bc696d66611edcbc013fed823b965bfecd
 
 	}
 
 	@Override
+<<<<<<< HEAD
+	public void unFavoriteNotes(Integer favoriteNoteId) throws Exception {
+
+		FavouriteNote favNote = favouriteNoteRepo.findById(favoriteNoteId)
+				.orElseThrow(() -> new ResourceNotFoundException("Favorite Notes not found & id invalid"));
+
+		favouriteNoteRepo.delete(favNote);
+	}
+
+	@Override
+	public List<FavoriteNoteDto> getUserFavoriteNotes() {
+
+		int userId = 1;
+
+		List<FavouriteNote> favoriateNotes = favouriteNoteRepo.findByUserId(userId);
+
+		return favoriateNotes.stream().map(fn -> mapper.map(fn, FavoriteNoteDto.class)).toList();
+	}
+
+	@Override
+	public boolean copyNotes(Integer id) throws Exception {
+
+		Notes notes = notesRepo.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Notes is invalid ! Not Found"));
+
+		Notes copyNotes = Notes.builder()
+
+				.title(notes.getTitle()).description(notes.getDescription()).category(notes.getCategory())
+				.fileDetails(null)
+
+				.build();
+
+		Notes saveCopyNotes = notesRepo.save(copyNotes);
+
+		if (!ObjectUtils.isEmpty(saveCopyNotes)) {
+
+			return true;
+		}
+
+		return false;
+=======
 	public void restoreDeletedNotes(Integer id) throws Exception {
 
 		Notes notes = notesRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Id Not Found"));
@@ -257,6 +318,7 @@ public class NotesServiceImpl implements NotesService {
 
 		return notesDtoList;
 
+>>>>>>> 6ea6b7bc696d66611edcbc013fed823b965bfecd
 	}
 
 }

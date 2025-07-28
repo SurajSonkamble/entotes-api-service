@@ -1,11 +1,6 @@
 package com.becoder.entity;
 
-import java.time.LocalDateTime;
-
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
 import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -16,31 +11,21 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Builder
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@EntityListeners(AuditingEntityListener.class)
-public class Notes extends BaseModel {
+@Builder
+public class FavouriteNote {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 
-	private String title;
-
-	private String description;
-
 	@ManyToOne
-	private Category category;
+	private Notes note;
 
-	@ManyToOne
-	private FileDetails fileDetails;
-
-	private Boolean isDeleted;
-
-	private LocalDateTime deletedOn;
+	private Integer userId;
 
 }
