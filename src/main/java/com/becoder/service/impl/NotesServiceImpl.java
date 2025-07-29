@@ -229,7 +229,7 @@ public class NotesServiceImpl implements NotesService {
 	}
 
 	@Override
-<<<<<<< HEAD
+
 	public void favoriteNotes(Integer notesId) throws Exception {
 
 		int userId = 1;
@@ -242,7 +242,9 @@ public class NotesServiceImpl implements NotesService {
 				.build();
 
 		favouriteNoteRepo.save(favouriteNote);
-=======
+
+	}
+
 	public void hardDeleteNotes(Integer id) throws Exception {
 
 		Notes notes = notesRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Id not Found"));
@@ -252,12 +254,11 @@ public class NotesServiceImpl implements NotesService {
 		notes.setDeletedOn(LocalDateTime.now());
 
 		notesRepo.save(notes);
->>>>>>> 6ea6b7bc696d66611edcbc013fed823b965bfecd
 
 	}
 
 	@Override
-<<<<<<< HEAD
+
 	public void unFavoriteNotes(Integer favoriteNoteId) throws Exception {
 
 		FavouriteNote favNote = favouriteNoteRepo.findById(favoriteNoteId)
@@ -285,7 +286,7 @@ public class NotesServiceImpl implements NotesService {
 		Notes copyNotes = Notes.builder()
 
 				.title(notes.getTitle()).description(notes.getDescription()).category(notes.getCategory())
-				.fileDetails(null)
+				.isDeleted(false).fileDetails(null)
 
 				.build();
 
@@ -297,7 +298,8 @@ public class NotesServiceImpl implements NotesService {
 		}
 
 		return false;
-=======
+	}
+
 	public void restoreDeletedNotes(Integer id) throws Exception {
 
 		Notes notes = notesRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Id Not Found"));
@@ -318,7 +320,6 @@ public class NotesServiceImpl implements NotesService {
 
 		return notesDtoList;
 
->>>>>>> 6ea6b7bc696d66611edcbc013fed823b965bfecd
 	}
 
 }
