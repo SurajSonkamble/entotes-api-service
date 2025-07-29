@@ -15,14 +15,19 @@ import com.becoder.dto.TodoDto;
 import com.becoder.dto.TodoDto.StatusDto;
 import com.becoder.dto.UserDto;
 import com.becoder.enums.TodoStatus;
+import com.becoder.exception.ExistDataException;
 import com.becoder.exception.ResourceNotFoundException;
 import com.becoder.repository.RoleRepository;
+import com.becoder.repository.UserRepository;
 
 @Component
 public class Validation {
 
 	@Autowired
 	private RoleRepository roleRepo;
+
+	@Autowired
+	private UserRepository userRepo;
 
 	public void categoryValidation(CategoryDto categoryDto) {
 
@@ -119,6 +124,15 @@ public class Validation {
 		if (!StringUtils.hasText(userDto.getEmail()) || !userDto.getEmail().matches(Constants.EMAIL_REGEX)) {
 
 			throw new IllegalArgumentException("email is invalid");
+		} else {
+
+			boolean existsByEmail = userRepo.existsByEmail(userDto.getEmail());
+
+			if (existsByEmail) {
+
+				throw new ExistDataException("Email already exist");
+			}
+
 		}
 
 		if (!StringUtils.hasText(userDto.getMobNo()) || !userDto.getMobNo().matches(Constants.MOBNO_REGEX)) {
@@ -136,11 +150,11 @@ public class Validation {
 			List<Integer> invalidReqRoleids = userDto.getRoles().stream().map(r -> r.getId())
 					.filter(roleId -> !roleIds.contains(roleId)).toList();
 
-			
-			  if (!CollectionUtils.isEmpty(invalidReqRoleids)) {
-			  
-			  throw new IllegalArgumentException("role is invalid" + invalidReqRoleids); }
-			 
+			if (!CollectionUtils.isEmpty(invalidReqRoleids)) {
+
+				throw new IllegalArgumentException("role is invalid" + invalidReqRoleids);
+			}
+
 		}
 	}
 
