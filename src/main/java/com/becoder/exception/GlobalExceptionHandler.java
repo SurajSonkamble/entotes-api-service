@@ -56,6 +56,13 @@ public class GlobalExceptionHandler {
 
 	}
 
+	@ExceptionHandler(IllegalArgumentException.class)
+	public ResponseEntity<?> handleIllegalArgumentException(IllegalArgumentException e) {
+
+		return CommonUtils.createErrorResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
+
+	}
+
 	@ExceptionHandler(ExistDataException.class)
 	public ResponseEntity<?> handleExistDataException(ExistDataException e) {
 
@@ -65,13 +72,14 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(HttpMessageNotReadableException.class)
 	public ResponseEntity<?> handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
 
-		return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+		return CommonUtils.createErrorResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
 	}
 
 	@ExceptionHandler(FileNotFoundException.class)
 	public ResponseEntity<?> handleFileNotFoundException(FileNotFoundException e) {
 
-		return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+		return CommonUtils.createErrorResponse(e.getMessage(), HttpStatus.NOT_FOUND);
 
 	}
+
 }

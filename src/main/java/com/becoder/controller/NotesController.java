@@ -90,7 +90,7 @@ public class NotesController {
 
 	}
 
-<<<<<<< HEAD
+
 	@GetMapping("/fav/{noteId}")
 	public ResponseEntity<?> favoriteNote(@PathVariable Integer noteId) throws Exception {
 
@@ -132,8 +132,8 @@ public class NotesController {
 		}
 
 		return CommonUtils.createErrorResponseMessage("copy Failed ! Try Again", HttpStatus.INTERNAL_SERVER_ERROR);
+	}
 
-=======
 	@DeleteMapping("/delete/{id}")
 	public ResponseEntity<?> hardDeleteNotes(@PathVariable Integer id) throws Exception {
 
@@ -172,7 +172,7 @@ public class NotesController {
 		notesService.hardDeleteNotes(id);
 
 		return CommonUtils.createBuildResponseMessage("Deleteed Success", HttpStatus.OK);
->>>>>>> 6ea6b7bc696d66611edcbc013fed823b965bfecd
+
 	}
 
 }
