@@ -12,6 +12,8 @@ import com.becoder.dto.UserDto;
 import com.becoder.service.UserService;
 import com.becoder.util.CommonUtils;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 @RestController
 @RequestMapping("/api/v1/auth")
 public class AuthController {
@@ -20,9 +22,11 @@ public class AuthController {
 	private UserService userService;
 
 	@PostMapping("/")
-	public ResponseEntity<?> registerUser(@RequestBody UserDto userDto) throws Exception {
+	public ResponseEntity<?> registerUser(@RequestBody UserDto userDto, HttpServletRequest request) throws Exception {
 
-		boolean register = userService.register(userDto);
+		String url = CommonUtils.getUrl(request);
+
+		boolean register = userService.register(userDto, url);
 
 		if (register) {
 
