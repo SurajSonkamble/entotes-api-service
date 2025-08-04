@@ -30,7 +30,7 @@ public class HomeServiceImpl implements HomeService {
 
 			AccountStatus status = user.getStatus();
 
-			status.setActive(true);
+			status.setIsActive(true);
 			status.setVerificationCode(null);
 
 			userRepo.save(user);

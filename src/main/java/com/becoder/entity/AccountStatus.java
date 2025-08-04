@@ -22,7 +22,7 @@ public class AccountStatus {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 
-	private boolean isActive;
+	private Boolean isActive;
 
 	private String verificationCode;
 
