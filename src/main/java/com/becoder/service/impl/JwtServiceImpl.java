@@ -14,9 +14,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import com.becoder.entity.User;
+import com.becoder.exception.JwtTokenExpiredException;
 import com.becoder.service.JwtService;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -53,7 +56,7 @@ public class JwtServiceImpl implements JwtService {
 
 		String token = Jwts.builder().claims().add(null).subject(user.getEmail())
 				.issuedAt(new Date(System.currentTimeMillis()))
-				.expiration(new Date(System.currentTimeMillis() + 60 * 60* 60 * 10)).and().signWith(getKey()).compact();
+				.expiration(new Date(System.currentTimeMillis() + 60 * 60 * 10)).and().signWith(getKey()).compact();
 
 		return token;
 	}
@@ -74,14 +77,13 @@ public class JwtServiceImpl implements JwtService {
 	 * 
 	 * return claims.getSubject(); }
 	 */
-	
-	public String extractUsername(String token) {
-	    if (token == null || token.trim().isEmpty()) {
-	        throw new IllegalArgumentException("JWT token must not be null or empty");
-	    }
-	    return extractAllClaims(token).getSubject();
-	}
 
+	public String extractUsername(String token) {
+		if (token == null || token.trim().isEmpty()) {
+			throw new IllegalArgumentException("JWT token must not be null or empty");
+		}
+		return extractAllClaims(token).getSubject();
+	}
 
 	public String role(String token) {
 
@@ -93,11 +95,22 @@ public class JwtServiceImpl implements JwtService {
 	}
 
 	private Claims extractAllClaims(String token) {
-		if (token == null || token.trim().isEmpty()) {
-			throw new IllegalArgumentException("JWT token must not be null or empty");
+
+		try {
+
+			return Jwts.parser().verifyWith(decrytKey(secretKey)).build().parseSignedClaims(token).getPayload();
+
+		} catch (ExpiredJwtException e) {
+
+			throw new JwtTokenExpiredException("Token is Expired");
+		} catch (JwtException e) {
+
+			throw new JwtTokenExpiredException("Invalid Jwt token");
+		} catch (Exception e) {
+
+			throw e;
 		}
 
-		return Jwts.parser().verifyWith(decrytKey(secretKey)).build().parseSignedClaims(token).getPayload();
 	}
 
 	private SecretKey decrytKey(String secretKey2) {
