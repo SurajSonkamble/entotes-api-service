@@ -35,12 +35,12 @@ public class CustomUserDetails implements UserDetails {
 		
 		user.getRoles().forEach(r -> {
 		
-			authority.add(new SimpleGrantedAuthority(r.getName()));
+			authority.add(new SimpleGrantedAuthority("ROLE_"+r.getName()));
 			
 		});
 		
 		
-		return null;
+		return authority;
 	}
 
 	@Override

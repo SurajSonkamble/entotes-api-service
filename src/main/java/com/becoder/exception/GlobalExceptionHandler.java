@@ -1,6 +1,7 @@
 package com.becoder.exception;
 
 import java.io.FileNotFoundException;
+import java.nio.file.AccessDeniedException;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -86,13 +87,19 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(SuccessException.class)
 	public ResponseEntity<?> handleSuccessException(SuccessException e) {
 
-		return CommonUtils.createBuildResponseMessage(e.getMessage(), HttpStatus.OK);
+		return CommonUtils.createErrorResponseMessage(e.getMessage(), HttpStatus.OK);
 	}
 
 	@ExceptionHandler(BadCredentialsException.class)
 	public ResponseEntity<?> handleBadCredentialsException(BadCredentialsException e) {
 
 		return CommonUtils.createErrorResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
+	}
+
+	@ExceptionHandler(AccessDeniedException.class)
+	public ResponseEntity<?> handleAccessDeniedException(AccessDeniedException e) {
+
+		return CommonUtils.createErrorResponseMessage(e.getMessage(), HttpStatus.FORBIDDEN);
 	}
 
 }
