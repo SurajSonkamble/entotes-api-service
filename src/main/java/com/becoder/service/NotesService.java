@@ -19,7 +19,7 @@ public interface NotesService {
 
 	public FileDetails getFileDetails(Integer id) throws Exception;
 
-	public NotesResponse getAllNotesByUser(Integer userId, Integer pageNo, Integer pageSize);
+	public NotesResponse getAllNotesByUser( Integer pageNo, Integer pageSize);
 
 	public void favoriteNotes(Integer notesId) throws Exception;
 
@@ -35,7 +35,7 @@ public interface NotesService {
 
 	// public void emptyRecycleBin(int userId);
 
-	public List<NotesDto> getUserRecycleBinNotes(int userId);
+	public List<NotesDto> getUserRecycleBinNotes();
 
 
 }
