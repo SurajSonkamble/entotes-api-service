@@ -39,6 +39,7 @@ import com.becoder.repository.FavouriteNoteRepository;
 import com.becoder.repository.FileRepository;
 import com.becoder.repository.NotesRepository;
 import com.becoder.service.NotesService;
+import com.becoder.util.CommonUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
@@ -213,7 +214,9 @@ public class NotesServiceImpl implements NotesService {
 	}
 
 	@Override
-	public NotesResponse getAllNotesByUser(Integer userId, Integer pageNo, Integer pageSize) {
+	public NotesResponse getAllNotesByUser( Integer pageNo, Integer pageSize) {
+		
+		Integer userId = CommonUtils.getLoggedInUser().getId();
 
 		Pageable pageable = PageRequest.of(pageNo, pageSize);
 
@@ -270,7 +273,8 @@ public class NotesServiceImpl implements NotesService {
 	@Override
 	public List<FavoriteNoteDto> getUserFavoriteNotes() {
 
-		int userId = 1;
+		Integer userId = CommonUtils.getLoggedInUser().getId();
+		
 
 		List<FavouriteNote> favoriateNotes = favouriteNoteRepo.findByUserId(userId);
 
@@ -312,7 +316,9 @@ public class NotesServiceImpl implements NotesService {
 	}
 
 	@Override
-	public List<NotesDto> getUserRecycleBinNotes(int userId) {
+	public List<NotesDto> getUserRecycleBinNotes() {
+		
+		Integer userId = CommonUtils.getLoggedInUser().getId();
 
 		List<Notes> recycleNotes = notesRepo.findByCreatedByAndIsDeletedTrue(userId);
 

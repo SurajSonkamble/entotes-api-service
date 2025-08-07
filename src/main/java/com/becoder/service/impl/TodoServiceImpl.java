@@ -14,6 +14,7 @@ import com.becoder.enums.TodoStatus;
 import com.becoder.exception.ResourceNotFoundException;
 import com.becoder.repository.TodoRepository;
 import com.becoder.service.TodoService;
+import com.becoder.util.CommonUtils;
 import com.becoder.util.Validation;
 
 @Service
@@ -56,33 +57,30 @@ public class TodoServiceImpl implements TodoService {
 		Todo todo = todoRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Id id Not Found"));
 
 		TodoDto todoDto = mapper.map(todo, TodoDto.class);
-		
+
 		setStatus(todoDto, todo);
 
 		return todoDto;
 	}
 
 	private void setStatus(TodoDto todoDto, Todo todo) {
-		
-		for(TodoStatus st : TodoStatus.values()) {
-			
-			if(st.getId().equals(todo.getStatusId())) {
-				
-				StatusDto statusDto = StatusDto.builder()
-						.id(st.getId())
-						.name(st.getName())
-						.build();
-				
+
+		for (TodoStatus st : TodoStatus.values()) {
+
+			if (st.getId().equals(todo.getStatusId())) {
+
+				StatusDto statusDto = StatusDto.builder().id(st.getId()).name(st.getName()).build();
+
 				todoDto.setStatus(statusDto);
 			}
 		}
-		
+
 	}
 
 	@Override
 	public List<TodoDto> getTodoByUser() {
 
-		int userId = 2;
+		Integer userId = CommonUtils.getLoggedInUser().getId();
 
 		List<Todo> todos = todoRepo.findByCreatedBy(userId);
 

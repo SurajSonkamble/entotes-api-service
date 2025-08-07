@@ -7,6 +7,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,6 +33,7 @@ public class NotesController {
 	private NotesService notesService;
 
 	@PostMapping("/")
+	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<?> saveNotes(@RequestParam String notes, @RequestParam(required = false) MultipartFile file)
 			throws Exception {
 
@@ -47,6 +49,7 @@ public class NotesController {
 	}
 
 	@GetMapping("/")
+	@PreAuthorize("hasAnyRole('USER','ADMIN')")
 	public ResponseEntity<?> getAllNotes() {
 
 		List<NotesDto> allNotes = notesService.getAllNotes();
@@ -61,6 +64,7 @@ public class NotesController {
 	}
 
 	@GetMapping("/download/{id}")
+	@PreAuthorize("hasRole('USER','ADMIN')")
 	public ResponseEntity<?> downloadFile(@PathVariable Integer id) throws Exception {
 
 		FileDetails fileDetails = notesService.getFileDetails(id);
@@ -79,17 +83,15 @@ public class NotesController {
 	}
 
 	@GetMapping("/user-notes")
+	@PreAuthorize("hasRole('USER')")
 	public ResponseEntity<?> getAllNotesByUser(@RequestParam(defaultValue = "0") Integer pageNo,
 			@RequestParam(defaultValue = "10") Integer pageSize) {
 
-		Integer userId = 1;
-
-		NotesResponse notes = notesService.getAllNotesByUser(userId, pageNo, pageSize);
+		NotesResponse notes = notesService.getAllNotesByUser(pageNo, pageSize);
 
 		return CommonUtils.createBuildResponse(notes, HttpStatus.OK);
 
 	}
-
 
 	@GetMapping("/fav/{noteId}")
 	public ResponseEntity<?> favoriteNote(@PathVariable Integer noteId) throws Exception {
@@ -155,9 +157,9 @@ public class NotesController {
 	@GetMapping("/recycle-bin")
 	public ResponseEntity<?> emptyRecycleBin(Integer userId) {
 
-		userId = 2;
+		// userId = 2;
 
-		List<NotesDto> notes = notesService.getUserRecycleBinNotes(userId);
+		List<NotesDto> notes = notesService.getUserRecycleBinNotes();
 
 		if (CollectionUtils.isEmpty(notes)) {
 
