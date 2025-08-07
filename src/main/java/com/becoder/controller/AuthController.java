@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.becoder.dto.LoginRequest;
 import com.becoder.dto.LoginResponse;
 import com.becoder.dto.UserRequest;
-import com.becoder.service.UserService;
+import com.becoder.service.AuthService;
 import com.becoder.util.CommonUtils;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,14 +22,14 @@ import jakarta.servlet.http.HttpServletRequest;
 public class AuthController {
 
 	@Autowired
-	private UserService userService;
+	private AuthService authService;
 
 	@PostMapping("/")
 	public ResponseEntity<?> registerUser(@RequestBody UserRequest userDto, HttpServletRequest request) throws Exception {
 
 		String url = CommonUtils.getUrl(request);
 
-		boolean register = userService.register(userDto, url);
+		boolean register = authService.register(userDto, url);
 
 		if (register) {
 
@@ -43,7 +43,7 @@ public class AuthController {
 	@PostMapping("/login")
 	public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
 
-		LoginResponse loginResponse = userService.login(loginRequest);
+		LoginResponse loginResponse = authService.login(loginRequest);
 
 		if (ObjectUtils.isEmpty(loginResponse)) {
 
