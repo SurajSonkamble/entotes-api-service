@@ -19,7 +19,7 @@ public class EmailService {
 	@Value("${spring.mail.username}")
 	private String mailFrom;
 
-	public void senEmail(EmailRequest emailReq) throws Exception {
+	public void sendEmail(EmailRequest emailReq) throws Exception {
 
 		MimeMessage message = mailSender.createMimeMessage();
 
