@@ -73,7 +73,7 @@ public class AuthServiceImpl implements AuthService {
 
 		if (!ObjectUtils.isEmpty(saveUser)) {
 
-			emailSend(saveUser, url);
+			emailSendForRegister(saveUser, url);
 
 			return true;
 		}
@@ -81,7 +81,7 @@ public class AuthServiceImpl implements AuthService {
 		return false;
 	}
 
-	private void emailSend(User saveUser, String url) throws Exception {
+	private void emailSendForRegister(User saveUser, String url) throws Exception {
 
 		String message = "Hi,<b>  [[username]]  </b>" + "<br> Your Account Register Successfully.<br>"
 				+ "<br> Click the below link verify & Active your account <br>"
@@ -94,7 +94,7 @@ public class AuthServiceImpl implements AuthService {
 		EmailRequest emailRequest = EmailRequest.builder().to(saveUser.getEmail())
 				.title("Account Creating Confirmation").subject("Account Created Success").message(message).build();
 
-		emailService.senEmail(emailRequest);
+		emailService.sendEmail(emailRequest);
 
 	}
 
