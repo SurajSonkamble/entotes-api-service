@@ -214,8 +214,8 @@ public class NotesServiceImpl implements NotesService {
 	}
 
 	@Override
-	public NotesResponse getAllNotesByUser( Integer pageNo, Integer pageSize) {
-		
+	public NotesResponse getAllNotesByUser(Integer pageNo, Integer pageSize) {
+
 		Integer userId = CommonUtils.getLoggedInUser().getId();
 
 		Pageable pageable = PageRequest.of(pageNo, pageSize);
@@ -223,6 +223,26 @@ public class NotesServiceImpl implements NotesService {
 		Page<Notes> pageNotes = notesRepo.findByCreatedBy(userId, pageable);
 
 		List<NotesDto> notesDto = pageNotes.get().map(n -> mapper.map(n, NotesDto.class)).toList();
+
+		NotesResponse notes = NotesResponse.builder().notes(notesDto).pageNO(pageNotes.getNumber())
+				.pageSize(pageNotes.getSize()).totalElements(pageNotes.getTotalElements())
+				.totalPages(pageNotes.getTotalPages()).isFirst(pageNotes.isFirst()).isLast(pageNotes.isLast()).build();
+
+		return notes;
+	}
+
+	@Override
+	public NotesResponse getAllNoteByUserSearch(Integer pageNo, Integer pageSize, String keyword) {
+
+		Integer userId = CommonUtils.getLoggedInUser().getId();
+
+		Pageable pageable = PageRequest.of(pageNo, pageSize);
+
+		Page<Notes> pageNotes = notesRepo.searchNotes(keyword, userId, pageable);
+
+		List<NotesDto> notesDto = pageNotes.get().map(n -> mapper.map(n, NotesDto.class)).toList();
+
+		// System.out.println("notes Data " + notesDto);
 
 		NotesResponse notes = NotesResponse.builder().notes(notesDto).pageNO(pageNotes.getNumber())
 				.pageSize(pageNotes.getSize()).totalElements(pageNotes.getTotalElements())
@@ -274,7 +294,6 @@ public class NotesServiceImpl implements NotesService {
 	public List<FavoriteNoteDto> getUserFavoriteNotes() {
 
 		Integer userId = CommonUtils.getLoggedInUser().getId();
-		
 
 		List<FavouriteNote> favoriateNotes = favouriteNoteRepo.findByUserId(userId);
 
@@ -317,7 +336,7 @@ public class NotesServiceImpl implements NotesService {
 
 	@Override
 	public List<NotesDto> getUserRecycleBinNotes() {
-		
+
 		Integer userId = CommonUtils.getLoggedInUser().getId();
 
 		List<Notes> recycleNotes = notesRepo.findByCreatedByAndIsDeletedTrue(userId);

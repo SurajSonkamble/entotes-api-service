@@ -2,6 +2,7 @@ package com.becoder.controller;
 
 import java.util.List;
 
+import org.modelmapper.internal.bytebuddy.implementation.bytecode.constant.DefaultValue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -175,6 +176,16 @@ public class NotesController {
 
 		return CommonUtils.createBuildResponseMessage("Deleteed Success", HttpStatus.OK);
 
+	}
+
+	
+	@GetMapping("/search")
+	@PreAuthorize("hasRole('ADMIN')")
+	public ResponseEntity<?> searchNotes(@RequestParam(name = "key",defaultValue = "") String key,
+			@RequestParam(name = "pageNo", defaultValue = "0") Integer pageNo,
+			@RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize) {
+		NotesResponse notes = notesService.getAllNoteByUserSearch(pageNo, pageSize,key);
+		return CommonUtils.createBuildResponse(notes, HttpStatus.OK);
 	}
 
 }
