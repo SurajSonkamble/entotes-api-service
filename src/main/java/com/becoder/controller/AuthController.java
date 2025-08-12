@@ -12,36 +12,43 @@ import org.springframework.web.bind.annotation.RestController;
 import com.becoder.dto.LoginRequest;
 import com.becoder.dto.LoginResponse;
 import com.becoder.dto.UserRequest;
+import com.becoder.endpoint.AuthEndpoint;
 import com.becoder.service.AuthService;
 import com.becoder.util.CommonUtils;
 
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
-@RequestMapping("/api/v1/auth")
-public class AuthController {
+public class AuthController implements AuthEndpoint {
 
 	@Autowired
 	private AuthService authService;
 
-	@PostMapping("/")
-	public ResponseEntity<?> registerUser(@RequestBody UserRequest userDto, HttpServletRequest request) throws Exception {
+	@Override
+	public ResponseEntity<?> registerUser(UserRequest userDto, HttpServletRequest request) throws Exception {
+
+		log.info("AuthController : registerUser() : Exceution Start");
 
 		String url = CommonUtils.getUrl(request);
 
 		boolean register = authService.register(userDto, url);
 
-		if (register) {
+		if (!register) {
 
-			return CommonUtils.createBuildResponseMessage("User Resistration Success", HttpStatus.CREATED);
+			log.info("Error : {}", "Register failed");
+			return CommonUtils.createBuildResponseMessage("User Not Registered", HttpStatus.INTERNAL_SERVER_ERROR);
+
 		}
 
-		return CommonUtils.createBuildResponseMessage("User Not Registered", HttpStatus.INTERNAL_SERVER_ERROR);
+		log.info("AuthController : registerUser() : Execution End");
+		return CommonUtils.createBuildResponseMessage("User Resistration Success", HttpStatus.CREATED);
+
 	}
 
-	
-	@PostMapping("/login")
-	public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
+	@Override
+	public ResponseEntity<?> login(LoginRequest loginRequest) {
 
 		LoginResponse loginResponse = authService.login(loginRequest);
 

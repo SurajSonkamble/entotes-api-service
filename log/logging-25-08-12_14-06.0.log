@@ -1,0 +1,64 @@
+2025-12-06 14:06:50.054 INFO  [File Watcher] o.s.b.d.a.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener - Restarting due to 1 class path change (0 additions, 0 deletions, 1 modification)
+2025-12-06 14:06:50.060 INFO  [Thread-31] o.s.b.w.e.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2025-12-06 14:06:50.061 INFO  [tomcat-shutdown] o.a.coyote.http11.Http11NioProtocol - Pausing ProtocolHandler ["http-nio-8080"]
+2025-12-06 14:06:50.069 INFO  [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown - Graceful shutdown complete
+2025-12-06 14:06:50.070 INFO  [Thread-31] o.a.coyote.http11.Http11NioProtocol - Stopping ProtocolHandler ["http-nio-8080"]
+2025-12-06 14:06:50.079 INFO  [Thread-31] o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-12-06 14:06:50.083 INFO  [Thread-31] com.zaxxer.hikari.HikariDataSource - HikariPool-8 - Shutdown initiated...
+2025-12-06 14:06:50.089 INFO  [Thread-31] com.zaxxer.hikari.HikariDataSource - HikariPool-8 - Shutdown completed.
+2025-12-06 14:06:50.168 INFO  [restartedMain] c.b.EnotesApiServiceApplication - Starting EnotesApiServiceApplication using Java 21.0.5 with PID 15968 (C:\Users\XANGARS\Documents\workspace-spring-tool-suite-4-4.27.0.RELEASE\entotes-api-service\target\classes started by XANGARS in C:\Users\XANGARS\Documents\workspace-spring-tool-suite-4-4.27.0.RELEASE\entotes-api-service)
+2025-12-06 14:06:50.168 INFO  [restartedMain] c.b.EnotesApiServiceApplication - No active profile set, falling back to 1 default profile: "default"
+2025-12-06 14:06:50.294 INFO  [restartedMain] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-12-06 14:06:50.310 INFO  [restartedMain] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 15 ms. Found 7 JPA repository interfaces.
+2025-12-06 14:06:50.400 INFO  [restartedMain] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2025-12-06 14:06:50.401 INFO  [restartedMain] o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2025-12-06 14:06:50.401 INFO  [restartedMain] o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-12-06 14:06:50.401 INFO  [restartedMain] o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.42]
+2025-12-06 14:06:50.411 INFO  [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-12-06 14:06:50.411 INFO  [restartedMain] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 241 ms
+2025-12-06 14:06:50.439 INFO  [restartedMain] o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-12-06 14:06:50.441 INFO  [restartedMain] o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-12-06 14:06:50.446 INFO  [restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-12-06 14:06:50.446 INFO  [restartedMain] com.zaxxer.hikari.HikariDataSource - HikariPool-9 - Starting...
+2025-12-06 14:06:50.455 INFO  [restartedMain] com.zaxxer.hikari.pool.HikariPool - HikariPool-9 - Added connection com.mysql.cj.jdbc.ConnectionImpl@1c423d55
+2025-12-06 14:06:50.455 INFO  [restartedMain] com.zaxxer.hikari.HikariDataSource - HikariPool-9 - Start completed.
+2025-12-06 14:06:50.455 WARN  [restartedMain] org.hibernate.orm.deprecation - HHH90000025: MySQL8Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-12-06 14:06:50.455 WARN  [restartedMain] org.hibernate.orm.deprecation - HHH90000026: MySQL8Dialect has been deprecated; use org.hibernate.dialect.MySQLDialect instead
+2025-12-06 14:06:50.455 INFO  [restartedMain] o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-9)']
+	Database driver: undefined/unknown
+	Database version: 8.0
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-12-06 14:06:50.543 INFO  [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-12-06 14:06:50.543 INFO  [restartedMain] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-12-06 14:06:50.628 INFO  [restartedMain] o.s.s.c.a.a.c.InitializeAuthenticationProviderBeanManagerConfigurer$InitializeAuthenticationProviderManagerConfigurer - Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2025-12-06 14:06:50.628 WARN  [restartedMain] o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2025-12-06 14:06:50.633 WARN  [restartedMain] o.s.b.w.s.c.AnnotationConfigServletWebServerApplicationContext - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'authController': Unsatisfied dependency expressed through method 'registerUser' parameter 0: No qualifying bean of type 'com.becoder.dto.UserRequest' available: expected at least 1 bean which qualifies as autowire candidate. Dependency annotations: {@org.springframework.web.bind.annotation.RequestBody(required=true)}
+2025-12-06 14:06:50.633 INFO  [restartedMain] o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-12-06 14:06:50.634 INFO  [restartedMain] com.zaxxer.hikari.HikariDataSource - HikariPool-9 - Shutdown initiated...
+2025-12-06 14:06:50.657 INFO  [restartedMain] com.zaxxer.hikari.HikariDataSource - HikariPool-9 - Shutdown completed.
+2025-12-06 14:06:50.657 INFO  [restartedMain] o.a.catalina.core.StandardService - Stopping service [Tomcat]
+2025-12-06 14:06:50.661 INFO  [restartedMain] o.s.b.a.l.ConditionEvaluationReportLogger - 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2025-12-06 14:06:50.677 ERROR [restartedMain] o.s.b.d.LoggingFailureAnalysisReporter - 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Parameter 0 of method registerUser in com.becoder.controller.AuthController required a bean of type 'com.becoder.dto.UserRequest' that could not be found.
+
+The injection point has the following annotations:
+	- @org.springframework.web.bind.annotation.RequestBody(required=true)
+
+
+Action:
+
+Consider defining a bean of type 'com.becoder.dto.UserRequest' in your configuration.
+

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.becoder.dto.CategoryDto;
 import com.becoder.dto.CategoryResponse;
+import com.becoder.endpoint.CategoryEndpoint;
 import com.becoder.entity.Category;
 import com.becoder.exception.ResourceNotFoundException;
 import com.becoder.service.CategoryService;
@@ -26,16 +27,15 @@ import com.becoder.util.CommonUtils;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
-@RequestMapping("/api/v1/category")
+
 @Slf4j
-public class CategoryController {
+public class CategoryController implements CategoryEndpoint {
 
 	@Autowired
 	private CategoryService categoryService;
 
-	@PostMapping("/save")
-	@PreAuthorize("hasRole('ADMIN')")
-	public ResponseEntity<?> saveCategory(@RequestBody CategoryDto categoryDto) throws Exception {
+	@Override
+	public ResponseEntity<?> saveCategory(CategoryDto categoryDto) throws Exception {
 
 		Boolean saveCategory = categoryService.saveCategory(categoryDto);
 
@@ -53,8 +53,7 @@ public class CategoryController {
 
 	}
 
-	@GetMapping("/")
-	@PreAuthorize("hasRole('ADMIN')")
+	@Override
 	public ResponseEntity<?> getAllCategories() {
 
 		List<CategoryDto> allCategory = categoryService.getAllCategory();
@@ -72,8 +71,7 @@ public class CategoryController {
 
 	}
 
-	@GetMapping("/active")
-	@PreAuthorize("hasAnyRole('USER','ADMIN')")
+	@Override
 	public ResponseEntity<?> getActiveCategory() {
 
 		List<CategoryResponse> activeCategory = categoryService.getActiveCategory();
@@ -90,9 +88,8 @@ public class CategoryController {
 		}
 	}
 
-	@GetMapping("/{id}")
-	@PreAuthorize("hasRole('ADMIN')")
-	public ResponseEntity<?> getCategoryDetailsById(@PathVariable Integer id) throws Exception {
+	@Override
+	public ResponseEntity<?> getCategoryDetailsById(Integer id) throws Exception {
 
 		CategoryDto categoryDto = categoryService.getCategoryById(id);
 
@@ -111,8 +108,8 @@ public class CategoryController {
 
 	}
 
-	@DeleteMapping("delete/{id}")
-	public ResponseEntity<?> deleteCategory(@PathVariable Integer id) {
+	@Override
+	public ResponseEntity<?> deleteCategory(Integer id) {
 
 		Boolean deleted = categoryService.deleteCategoryById(id);
 

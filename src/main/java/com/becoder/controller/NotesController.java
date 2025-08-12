@@ -2,19 +2,12 @@ package com.becoder.controller;
 
 import java.util.List;
 
-import org.modelmapper.internal.bytebuddy.implementation.bytecode.constant.DefaultValue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,21 +15,20 @@ import org.springframework.web.multipart.MultipartFile;
 import com.becoder.dto.FavoriteNoteDto;
 import com.becoder.dto.NotesDto;
 import com.becoder.dto.NotesResponse;
+import com.becoder.endpoint.NotesEndpoint;
 import com.becoder.entity.FileDetails;
 import com.becoder.service.NotesService;
 import com.becoder.util.CommonUtils;
 
 @RestController
-@RequestMapping("/api/v1/notes")
-public class NotesController {
+
+public class NotesController implements NotesEndpoint {
 
 	@Autowired
 	private NotesService notesService;
 
-	@PostMapping("/")
-	@PreAuthorize("hasRole('ADMIN')")
-	public ResponseEntity<?> saveNotes(@RequestParam String notes, @RequestParam(required = false) MultipartFile file)
-			throws Exception {
+	@Override
+	public ResponseEntity<?> saveNotes(String notes, MultipartFile file) throws Exception {
 
 		boolean saveNotes = notesService.saveNotes(notes, file);
 
@@ -49,8 +41,7 @@ public class NotesController {
 
 	}
 
-	@GetMapping("/")
-	@PreAuthorize("hasAnyRole('USER','ADMIN')")
+	@Override
 	public ResponseEntity<?> getAllNotes() {
 
 		List<NotesDto> allNotes = notesService.getAllNotes();
@@ -64,9 +55,8 @@ public class NotesController {
 
 	}
 
-	@GetMapping("/download/{id}")
-	@PreAuthorize("hasRole('USER','ADMIN')")
-	public ResponseEntity<?> downloadFile(@PathVariable Integer id) throws Exception {
+	@Override
+	public ResponseEntity<?> downloadFile(Integer id) throws Exception {
 
 		FileDetails fileDetails = notesService.getFileDetails(id);
 
@@ -83,10 +73,8 @@ public class NotesController {
 		return new ResponseEntity<>("", HttpStatus.OK);
 	}
 
-	@GetMapping("/user-notes")
-	@PreAuthorize("hasRole('USER')")
-	public ResponseEntity<?> getAllNotesByUser(@RequestParam(defaultValue = "0") Integer pageNo,
-			@RequestParam(defaultValue = "10") Integer pageSize) {
+	@Override
+	public ResponseEntity<?> getAllNotesByUser(Integer pageNo, @RequestParam(defaultValue = "10") Integer pageSize) {
 
 		NotesResponse notes = notesService.getAllNotesByUser(pageNo, pageSize);
 
@@ -94,23 +82,23 @@ public class NotesController {
 
 	}
 
-	@GetMapping("/fav/{noteId}")
-	public ResponseEntity<?> favoriteNote(@PathVariable Integer noteId) throws Exception {
+	@Override
+	public ResponseEntity<?> favoriteNote(Integer noteId) throws Exception {
 
 		notesService.favoriteNotes(noteId);
 
 		return CommonUtils.createBuildResponseMessage("NOtes added favorite", HttpStatus.CREATED);
 	}
 
-	@DeleteMapping("/un-fav/{favNoteId}")
-	public ResponseEntity<?> unfavoriteNotes(@PathVariable Integer favNoteId) throws Exception {
+	@Override
+	public ResponseEntity<?> unfavoriteNotes(Integer favNoteId) throws Exception {
 
 		notesService.favoriteNotes(favNoteId);
 
 		return CommonUtils.createBuildResponseMessage("Remove Favorite", HttpStatus.OK);
 	}
 
-	@GetMapping("/fav-note")
+	@Override
 	public ResponseEntity<?> getFavoriteNote() {
 
 		List<FavoriteNoteDto> userFavoriteNotes = notesService.getUserFavoriteNotes();
@@ -124,8 +112,8 @@ public class NotesController {
 
 	}
 
-	@GetMapping("/copy/{id}")
-	public ResponseEntity<?> copyNotes(@PathVariable Integer id) throws Exception {
+	@Override
+	public ResponseEntity<?> copyNotes(Integer id) throws Exception {
 
 		boolean copyNotes = notesService.copyNotes(id);
 
@@ -137,17 +125,8 @@ public class NotesController {
 		return CommonUtils.createErrorResponseMessage("copy Failed ! Try Again", HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
-	@DeleteMapping("/delete/{id}")
-	public ResponseEntity<?> hardDeleteNotes(@PathVariable Integer id) throws Exception {
-
-		notesService.hardDeleteNotes(id);
-
-		return CommonUtils.createBuildResponseMessage("Delete Success", HttpStatus.OK);
-
-	}
-
-	@GetMapping("/restore/{id}")
-	public ResponseEntity<?> restoreDeleted(@PathVariable Integer id) throws Exception {
+	@Override
+	public ResponseEntity<?> restoreDeleted(Integer id) throws Exception {
 
 		notesService.restoreDeletedNotes(id);
 
@@ -155,7 +134,7 @@ public class NotesController {
 
 	}
 
-	@GetMapping("/recycle-bin")
+	@Override
 	public ResponseEntity<?> emptyRecycleBin(Integer userId) {
 
 		// userId = 2;
@@ -170,7 +149,8 @@ public class NotesController {
 		return CommonUtils.createBuildResponse(notes, HttpStatus.OK);
 	}
 
-	public ResponseEntity<?> hardDeleteNote(@PathVariable Integer id) throws Exception {
+	@Override
+	public ResponseEntity<?> hardDeleteNote(Integer id) throws Exception {
 
 		notesService.hardDeleteNotes(id);
 
@@ -178,13 +158,9 @@ public class NotesController {
 
 	}
 
-	
-	@GetMapping("/search")
-	@PreAuthorize("hasRole('ADMIN')")
-	public ResponseEntity<?> searchNotes(@RequestParam(name = "key",defaultValue = "") String key,
-			@RequestParam(name = "pageNo", defaultValue = "0") Integer pageNo,
-			@RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize) {
-		NotesResponse notes = notesService.getAllNoteByUserSearch(pageNo, pageSize,key);
+	@Override
+	public ResponseEntity<?> searchNotes(String key, Integer pageNo, Integer pageSize) {
+		NotesResponse notes = notesService.getAllNoteByUserSearch(pageNo, pageSize, key);
 		return CommonUtils.createBuildResponse(notes, HttpStatus.OK);
 	}
 
