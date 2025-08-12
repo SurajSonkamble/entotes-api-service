@@ -2,31 +2,26 @@ package com.becoder.controller;
 
 import java.util.List;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.becoder.dto.TodoDto;
+import com.becoder.endpoint.TodoEndpoint;
 import com.becoder.service.TodoService;
 import com.becoder.util.CommonUtils;
 
 @RestController
-@RequestMapping("/api/v1/todo")
-public class TodoController {
+
+public class TodoController implements TodoEndpoint {
 
 	@Autowired
 	private TodoService todoService;
 
-	@PostMapping("/")
-	public ResponseEntity<?> saveTodo(@RequestBody TodoDto todoDto) throws Exception {
+	@Override
+	public ResponseEntity<?> saveTodo(TodoDto todoDto) throws Exception {
 
 		boolean saveTodo = todoService.saveTodo(todoDto);
 
@@ -39,8 +34,8 @@ public class TodoController {
 
 	}
 
-	@GetMapping("/{id}")
-	public ResponseEntity<?> getTodoById(@PathVariable Integer id) throws Exception {
+	@Override
+	public ResponseEntity<?> getTodoById(Integer id) throws Exception {
 
 		TodoDto todoDto = todoService.getTodoById(id);
 
@@ -48,8 +43,7 @@ public class TodoController {
 
 	}
 
-	
-	@GetMapping("/list")
+	@Override
 	public ResponseEntity<?> getAllTodoByUser() {
 
 		List<TodoDto> todoByUser = todoService.getTodoByUser();
